@@ -11,7 +11,7 @@ body {
   align-items: center;
   justify-content: center;
   background-color: #ffffff;
-  height: 70px;
+  padding: 5px;
 }
 
 .image {
@@ -35,11 +35,6 @@ body {
   color: #737373;
 }
 
-.location1 {
-  display: flex;
-  color: #737373;
-}
-
 .location_row {
   display: flex;
   flex-direction: row;
@@ -51,9 +46,13 @@ body {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
+  column-gap: 40px;
+  row-gap: 0px;
 }
-
-.title_datetime {
+.date_time {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  margin-top: 5px;
 }

@@ -20,29 +20,27 @@ app.layout = html.Div([
 
     html.Div([
         html.Div([
-            html.Div([
-
-                html.Div([
                     html.Div([
                         html.Img(src=app.get_asset_url('iot.png'),
                                  className='image'),
                         html.Div('IOT Environment Monitoring',
                                  className='title_text')
                     ], className='title_image'),
+        ], className='title_background twelve columns')
+    ], className='row'),
 
-                    html.Div([
-                        html.Div([
-                            html.Div('Sensor location:'),
-                            html.Div('Walsall, England', className='location')
-                        ], className='location_row'),
+    html.Div([
+        html.Div([
+            html.Div([
+                html.Div([
+                    html.Div('Sensor location:'),
+                    html.Div('Walsall, England', className='location')
+                ], className='location_row'),
 
-                        html.Div(id='current_time', className='location1')
-                    ], className='location_time')
-                ], className='title_datetime')
-
-            ], className='title_background')
-        ], className='twelve columns')
-    ], className='row')
+                html.Div(id='current_time', className='location')
+            ], className='location_time')
+        ], className='date_time twelve columns')
+    ], className='row'),
 
 ])
 
