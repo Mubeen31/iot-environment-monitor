@@ -30,6 +30,7 @@ selected_tab_style = {
     'padding': '7.5px'
 
 }
+server = app.server
 
 app.layout = html.Div([
 
