@@ -3,15 +3,33 @@ from dash import html
 from dash import dcc
 from dash.dependencies import Input, Output
 from datetime import datetime
-import pytz
 import pandas as pd
+from app import app
+from tabsContent.tab_one import layout_tab_one
+from tabsContent.tab_two import layout_tab_two
+from tabsContent.tab_three import layout_tab_three
 
-metaTags = [{'name': 'viewport',
-             'content': 'width=device-width, initial-scale=1.0, maximum-scale=1.2, minimum-scale=0.5'}]
-externalStylesheet = [metaTags]
+tabs_styles = {'display': 'flex', 'flex-direction': 'row'}
+tab_style = {
+    'border-top': 'none',
+    'border-left': 'none',
+    'border-right': 'none',
+    'border-bottom': 'none',
+    'backgroundColor': 'rgba(255, 255, 255, 0)',
+    'height': '35px',
+    'padding': '7.5px'
+}
+selected_tab_style = {
+    'border-top': 'none',
+    'border-bottom': '2px solid blue',
+    'border-right': 'none',
+    'border-left': 'none',
+    'backgroundColor': 'rgba(255, 255, 255, 0)',
+    'fontWeight': 'bold',
+    'height': '35px',
+    'padding': '7.5px'
 
-app = dash.Dash(__name__, external_stylesheets=externalStylesheet)
-server = app.server
+}
 
 app.layout = html.Div([
 
@@ -69,7 +87,31 @@ app.layout = html.Div([
                 ], className='image_numeric_row'),
             ], className='image_numeric_column'),
         ], className='light_co2 twelve columns')
-    ], className='row')
+    ], className='row'),
+
+    html.Div([
+        html.Div([
+            dcc.Tabs(id='tabs', value='content_tab_one', children=[
+                dcc.Tab(label='Real Time',
+                        value='content_tab_one',
+                        style=tab_style,
+                        selected_style=selected_tab_style,
+                        className='font_family'),
+                dcc.Tab(label='Temperature',
+                        value='content_tab_two',
+                        style=tab_style,
+                        selected_style=selected_tab_style,
+                        className='font_family'),
+                dcc.Tab(label='Humidity',
+                        value='content_tab_three',
+                        style=tab_style,
+                        selected_style=selected_tab_style,
+                        className='font_family')
+            ], style=tabs_styles)
+        ], className='tabs_container twelve columns')
+    ], className='row'),
+
+    html.Div(id='return_tab_content', children=[])
 
 ])
 
@@ -162,15 +204,26 @@ def update_value(n_intervals):
                      style={'height': '50px'}),
 
             html.Div([
-                html.Div('{0:.0f}'.format(co2),
+                html.Div('{0:,.0f}'.format(co2),
                          className='numeric_value'),
-                html.Div('PPM', className='symbol')
+                html.Div('ppm', className='symbol')
             ], className='temperature_row')
         ], className='image_temperature'),
 
         html.P('CO2', style={'color': '#666666',
                              'margin-top': '-7px'})
     ]
+
+
+@app.callback(Output('return_tab_content', 'children'),
+              Input('tabs', 'value'))
+def render_content(value):
+    if value == 'content_tab_one':
+        return layout_tab_one
+    elif value == 'content_tab_two':
+        return layout_tab_two
+    elif value == 'content_tab_three':
+        return layout_tab_three
 
 
 if __name__ == '__main__':
