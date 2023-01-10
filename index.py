@@ -146,7 +146,7 @@ def update_value(n_intervals):
         ], className='image_temperature'),
 
         html.P('Temperature', style={'color': '#666666',
-                                     'margin-top': '-7px'})
+                                     'margin-top': '0px'})
     ]
 
 
@@ -167,8 +167,7 @@ def update_value(n_intervals):
             ], className='temperature_row')
         ], className='image_temperature'),
 
-        html.P('Humidity', style={'color': '#666666',
-                                  'margin-top': '-7px'})
+        html.P('Humidity', style={'color': '#666666'})
     ]
 
 
@@ -189,15 +188,14 @@ def update_value(n_intervals):
             ], className='temperature_row')
         ], className='image_temperature'),
 
-        html.P('Light Intensity', style={'color': '#666666',
-                                         'margin-top': '-7px'})
+        html.P('Light Intensity', style={'color': '#666666'})
     ]
 
 
 @app.callback(Output('co2', 'children'),
               [Input('update_value', 'n_intervals')])
 def update_value(n_intervals):
-    co2 = 460
+    co2 = 1120
 
     return [
         html.Div([
@@ -211,8 +209,7 @@ def update_value(n_intervals):
             ], className='temperature_row')
         ], className='image_temperature'),
 
-        html.P('CO2', style={'color': '#666666',
-                             'margin-top': '-7px'})
+        html.P('CO2 Level in Air', style={'color': '#666666'})
     ]
 
 
