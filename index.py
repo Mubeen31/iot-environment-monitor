@@ -17,6 +17,7 @@ tab_style = {
     'border-bottom': 'none',
     'backgroundColor': 'rgba(255, 255, 255, 0)',
     'height': '35px',
+    'width': 'auto',
     'padding': '7.5px'
 }
 selected_tab_style = {
@@ -27,6 +28,7 @@ selected_tab_style = {
     'backgroundColor': 'rgba(255, 255, 255, 0)',
     'fontWeight': 'bold',
     'height': '35px',
+    'width': 'auto',
     'padding': '7.5px'
 
 }
