@@ -1,6 +1,6 @@
 #include <ESP8266WiFi.h>
 #include "DHT.h"
-#define DHTPIN 13
+#define DHTPIN 12
 #define DHTTYPE DHT22
 DHT dht(DHTPIN, DHTTYPE);
 #include "secrets.h"
