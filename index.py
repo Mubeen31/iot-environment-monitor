@@ -1,47 +1,41 @@
-import dash
 from dash import html
 from dash import dcc
-from dash.dependencies import Input, Output
-from datetime import datetime
+from dash.dependencies import Output, Input
 import pandas as pd
+import dash_bootstrap_components as dbc
 from app import app
-from tabsContent.tab_one import layout_tab_one
-from tabsContent.tab_two import layout_tab_two
-from tabsContent.tab_three import layout_tab_three
+from contentTabs.tab_one import page_one_layout
+from contentTabs.tab_two import page_two_layout
+from contentTabs.tab_three import page_three_layout
 
-tabs_styles = {'display': 'flex', 'flex-direction': 'row'}
+server = app.server
+
 tab_style = {
     'border-top': 'none',
+    'border-bottom': 'none',
     'border-left': 'none',
     'border-right': 'none',
-    'border-bottom': 'none',
     'backgroundColor': 'rgba(255, 255, 255, 0)',
     'height': '35px',
-    'width': 'auto',
-    'padding': '7.5px'
+    'padding': '7.5px',
+    'width': 'auto'
 }
+
 selected_tab_style = {
     'border-top': 'none',
     'border-bottom': '2px solid blue',
-    'border-right': 'none',
     'border-left': 'none',
+    'border-right': 'none',
     'backgroundColor': 'rgba(255, 255, 255, 0)',
-    'fontWeight': 'bold',
     'height': '35px',
-    'width': 'auto',
-    'padding': '7.5px'
-
+    'padding': '7.5px',
+    'width': 'auto'
 }
-server = app.server
 
 app.layout = html.Div([
 
-    dcc.Interval(id='date_time',
-                 interval=1 * 1000,
-                 n_intervals=0),
-
     dcc.Interval(id='update_value',
-                 interval=1 * 11000,
+                 interval=1 * 16000,
                  n_intervals=0),
 
     html.Div([
@@ -49,9 +43,9 @@ app.layout = html.Div([
             html.Div([
                 html.Img(src=app.get_asset_url('iot.png'),
                          className='image'),
-                html.Div('IOT Environment Monitoring',
+                html.Div('IOT Environment Monitor',
                          className='title_text')
-            ], className='title_image'),
+            ], className='title_row')
         ], className='title_background twelve columns')
     ], className='row'),
 
@@ -60,11 +54,10 @@ app.layout = html.Div([
             html.Div([
                 html.Div([
                     html.Div('Sensor location:'),
-                    html.Div('Walsall, England', className='location')
+                    html.Div('Walsall, England', className='location_name')
                 ], className='location_row'),
-
-                html.Div(id='current_time', className='location')
-            ], className='location_time')
+                dbc.Spinner(html.Div(id='data_update_time', className='location_name'))
+            ], className='location_title_time')
         ], className='date_time twelve columns')
     ], className='row'),
 
@@ -74,9 +67,9 @@ app.layout = html.Div([
                 html.P('Current', style={'fontWeight': 'bold'}),
                 html.Div([
                     html.Div(id='temp'),
-                    html.Div(id='hum')
-                ], className='image_numeric_row'),
-            ], className='image_numeric_column'),
+                    html.Div(id='humi')
+                ], className='temp_humidity_row')
+            ], className='temp_humidity_column')
         ], className='temp_humidity twelve columns')
     ], className='row'),
 
@@ -87,9 +80,9 @@ app.layout = html.Div([
                 html.Div([
                     html.Div(id='light_intensity'),
                     html.Div(id='co2')
-                ], className='image_numeric_row'),
-            ], className='image_numeric_column'),
-        ], className='light_co2 twelve columns')
+                ], className='temp_humidity_row')
+            ], className='temp_humidity_column')
+        ], className='temp_humidity twelve columns')
     ], className='row'),
 
     html.Div([
@@ -98,19 +91,16 @@ app.layout = html.Div([
                 dcc.Tab(label='Real Time',
                         value='content_tab_one',
                         style=tab_style,
-                        selected_style=selected_tab_style,
-                        className='font_family'),
+                        selected_style=selected_tab_style),
                 dcc.Tab(label='Temperature',
                         value='content_tab_two',
                         style=tab_style,
-                        selected_style=selected_tab_style,
-                        className='font_family'),
+                        selected_style=selected_tab_style),
                 dcc.Tab(label='Humidity',
                         value='content_tab_three',
                         style=tab_style,
-                        selected_style=selected_tab_style,
-                        className='font_family')
-            ], style=tabs_styles)
+                        selected_style=selected_tab_style)
+            ], style={'display': 'flex', 'flex-direction': 'row'})
         ], className='tabs_container twelve columns')
     ], className='row'),
 
@@ -119,111 +109,121 @@ app.layout = html.Div([
 ])
 
 
-@app.callback(Output('current_time', 'children'),
-              [Input('date_time', 'n_intervals')])
-def update_time(n_intervals):
-    now = datetime.now()
-    dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
+@app.callback(Output('return_tab_content', 'children'),
+              [Input('tabs', 'value')])
+def render_content(value):
+    if value == 'content_tab_one':
+        return page_one_layout
+    elif value == 'content_tab_two':
+        return page_two_layout
+    elif value == 'content_tab_three':
+        return page_three_layout
+
+
+@app.callback(Output('data_update_time', 'children'),
+              [Input('update_value', 'n_intervals')])
+def update_value(n_intervals):
+    url = 'https://api.thingspeak.com/channels/2007583/fields/1/last.csv'
+    df = pd.read_csv(url)
+    df['created_at'] = pd.to_datetime(df['created_at'])
+    df['created_at'] = pd.to_datetime(df['created_at']).dt.strftime('%Y-%m-%d %H:%M:%S')
+    dt_string = df['created_at'].iloc[0]
 
     return [
-        html.Div(dt_string),
+        html.Div(dt_string)
     ]
 
 
 @app.callback(Output('temp', 'children'),
               [Input('update_value', 'n_intervals')])
 def update_value(n_intervals):
-    temp = float(3.5)
+    url = 'https://api.thingspeak.com/channels/2007583/fields/2/last.csv'
+    df = pd.read_csv(url)
+    temp = df['field2'].iloc[0]
 
     return [
         html.Div([
-            html.Img(src=app.get_asset_url('temp.png'),
+            html.Img(src=app.get_asset_url('hot.png'),
                      style={'height': '50px'}),
-
             html.Div([
+                html.Div('°C', className='symbol'),
                 html.Div('{0:.1f}'.format(temp),
-                         className='numeric_value'),
-                html.Div('°C', className='symbol')
-            ], className='temperature_row')
-        ], className='image_temperature'),
+                         className='numeric_value')
+            ], className='temp_symbol')
+        ], className='image_temp_row'),
 
         html.P('Temperature', style={'color': '#666666',
-                                     'margin-top': '0px'})
+                                     'margin-top': '-10px'})
     ]
 
 
-@app.callback(Output('hum', 'children'),
+@app.callback(Output('humi', 'children'),
               [Input('update_value', 'n_intervals')])
 def update_value(n_intervals):
-    hum = float(90.0)
+    url = 'https://api.thingspeak.com/channels/2007583/fields/1/last.csv'
+    df = pd.read_csv(url)
+    hum = df['field1'].iloc[0]
 
     return [
         html.Div([
             html.Img(src=app.get_asset_url('humidity.png'),
                      style={'height': '50px'}),
-
             html.Div([
+                html.Div('%', className='symbol'),
                 html.Div('{0:.1f}'.format(hum),
-                         className='numeric_value'),
-                html.Div('%', className='symbol')
-            ], className='temperature_row')
-        ], className='image_temperature'),
+                         className='numeric_value')
+            ], className='temp_symbol')
+        ], className='image_temp_row'),
 
-        html.P('Humidity', style={'color': '#666666'})
+        html.P('Humidity', style={'color': '#666666',
+                                  'margin-top': '-10px'})
     ]
 
 
 @app.callback(Output('light_intensity', 'children'),
               [Input('update_value', 'n_intervals')])
 def update_value(n_intervals):
-    light_inten = float(71.2)
+    url = 'https://api.thingspeak.com/channels/2007583/fields/3/last.csv'
+    df = pd.read_csv(url)
+    light_intens = df['field3'].iloc[0]
 
     return [
         html.Div([
-            html.Img(src=app.get_asset_url('sun.png'),
+            html.Img(src=app.get_asset_url('sunny.png'),
                      style={'height': '50px'}),
-
             html.Div([
-                html.Div('{0:.1f}'.format(light_inten),
-                         className='numeric_value'),
-                html.Div('lux', className='symbol')
-            ], className='temperature_row')
-        ], className='image_temperature'),
+                html.Div('lux', className='symbol'),
+                html.Div('{0:.0f}'.format(light_intens),
+                         className='numeric_value')
+            ], className='temp_symbol')
+        ], className='image_temp_row'),
 
-        html.P('Light Intensity', style={'color': '#666666'})
+        html.P('Light Intensity', style={'color': '#666666',
+                                         'margin-top': '-10px'})
     ]
 
 
 @app.callback(Output('co2', 'children'),
               [Input('update_value', 'n_intervals')])
 def update_value(n_intervals):
-    co2 = 1120
+    url = 'https://api.thingspeak.com/channels/2007583/fields/4/last.csv'
+    df = pd.read_csv(url)
+    co2 = df['field4'].iloc[0]
 
     return [
         html.Div([
             html.Img(src=app.get_asset_url('co2.png'),
                      style={'height': '50px'}),
-
             html.Div([
-                html.Div('{0:,.0f}'.format(co2),
-                         className='numeric_value'),
-                html.Div('ppm', className='symbol')
-            ], className='temperature_row')
-        ], className='image_temperature'),
+                html.Div('ppm', className='symbol'),
+                html.Div('{0:.0f}'.format(co2),
+                         className='numeric_value')
+            ], className='temp_symbol')
+        ], className='image_temp_row'),
 
-        html.P('CO2 Level in Air', style={'color': '#666666'})
+        html.P('CO2 Level in Air', style={'color': '#666666',
+                                          'margin-top': '-10px'})
     ]
-
-
-@app.callback(Output('return_tab_content', 'children'),
-              Input('tabs', 'value'))
-def render_content(value):
-    if value == 'content_tab_one':
-        return layout_tab_one
-    elif value == 'content_tab_two':
-        return layout_tab_two
-    elif value == 'content_tab_three':
-        return layout_tab_three
 
 
 if __name__ == '__main__':

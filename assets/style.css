@@ -8,6 +8,7 @@ body {
 
 .title_background {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   background-color: #ffffff;
@@ -19,116 +20,109 @@ body {
 }
 
 .title_text {
-  font-weight: bold;
-  font-size: 17px;
+ font-weight: bold;
+ font-size: 17;
 }
 
-.title_image {
+.title_row {
   display: flex;
   flex-direction: row;
-  justify-content: center;
   align-items: center;
-  gap: 5px;
+  justify-content: center;
+  column-gap: 5px;
 }
 
-.location {
+.date_time {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  margin-top: 5px;
+}
+
+.location_name {
   color: #737373;
 }
 
 .location_row {
   display: flex;
   flex-direction: row;
-  gap: 5px;
-}
-
-.location_time {
-  display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  column-gap: 40px;
-}
-.date_time {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #ffffff;
-  margin-top: 5px;
+  column-gap: 5px;
 }
 
-.image_numeric_row {
+.location_title_time {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
   justify-content: center;
+  flex-wrap: wrap;
   column-gap: 40px;
-  row-gap: 20px;
-}
-
-.image_numeric_column {
-  display: flex;
-  flex-direction: column;
 }
 
 .temp_humidity {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   background-color: #ffffff;
   margin-top: 20px;
-  padding: 20px;
-}
-
-.light_co2 {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #ffffff;
-  margin-top: 5px;
   padding: 20px;
 }
 
 .numeric_value {
   font-weight: bold;
   font-size: 35px;
-  margin-top: 5px;
+  margin-top: -25px;
 }
 
 .symbol {
-  display: flex;
-  color: #737373;
-  margin-top: -65px;
+ color: #737373;
+ margin-bottom: 10px;
 }
 
-.temperature_row {
+.temp_symbol {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  margin-top: -5px;
 }
 
-.image_temperature {
+.image_temp_row {
   display: flex;
   flex-direction: row;
+}
+
+.temp_humidity_row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 40px;
+  row-gap: 20px;
+}
+
+.temp_humidity_column {
+  display: flex;
+  flex-direction: column;
 }
 
 .tabs_container {
-  display: flex;
+  display:flex;
   flex-direction: row;
-  justify-content: center;
   background-color: #ffffff;
   margin-top: 20px;
   white-space: pre;
-  border-bottom: 1px solid #d9d9d9;
-}
-
-.font_family {
-  font-family: 'Roboto', sans-serif;
-}
-
-.tab_page {
-  display: flex;
-  align-items: center;
   justify-content: center;
+}
+
+.tabs_page {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   background-color: #ffffff;
   padding-top: 5px;
   padding-bottom: 15px;
@@ -143,7 +137,7 @@ body {
 .tab_temp_row {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
   column-gap: 120px;
+  justify-content: space-between;
+  align-items: center;
 }
