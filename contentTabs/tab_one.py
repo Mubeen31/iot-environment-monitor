@@ -66,7 +66,7 @@ def update_value(n_intervals):
                               size=12,
                               color='#666666')
             ),
-            yaxis=dict(
+            yaxis=dict(range=[min(df['field2']) - 0.05, max(df['field2']) + 0.05],
                 showline=False,
                 showgrid=True,
                 gridcolor='#e6e6e6',
